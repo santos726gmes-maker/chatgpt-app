@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>HeadTrick Kzz — Kzz Sensi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000000;
+  --surface:#0c0d10;
+  --surface-2:#14161b;
+  --pill:#1d1f24;
+  --line:rgba(255,255,255,.14);
+  --line-strong:rgba(255,255,255,.32);
+  --txt:#f4f4f6;
+  --muted:#8e929c;
+  --accent:#2b7fff;
+  --accent-soft:rgba(43,127,255,.22);
+  --glow-s:0 0 6px rgba(255,255,255,.55);
+  --glow-m:0 0 14px rgba(255,255,255,.26), 0 0 34px rgba(255,255,255,.10);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt)}
+body{
+  min-height:100vh;
+  overflow-x:hidden;
+  font-family:'Rajdhani',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+
+.app{
+  position:relative;
+  width:100%;
+  max-width:460px;
+  min-height:100vh;
+  margin:0 auto;
+  background:var(--bg);
+  overflow:hidden;
+  isolation:isolate;
+}
+
+/* Top mode switcher for dev testing */
+.mode-bar{
+  position:sticky;
+  top:0;
+  z-index:30;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  padding:8px 12px;
+  background:rgba(0,0,0,.86);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mode-tab{
+  height:34px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);
+  background:#111318;
+  color:#a0a5b1;
+  font-family:'Orbitron',sans-serif;
+  font-size:9.5px;
+  font-weight:700;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all .2s var(--ease);
+}
+.mode-tab.active{
+  background:#ffffff;
+  color:#090a0d;
+  border-color:#ffffff;
+}
+
+/* Login view matching reference */
+.login-view{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:calc(100vh - 51px);
+  padding:14px 16px 18px;
+}
+.login-view.hidden{display:none}
+
+.top-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.icon-circle{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.10);
+  background:#14161a;
+  color:#eef1f6;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  flex:0 0 auto;
+  transition:background .2s var(--ease), transform .15s var(--ease);
+}
+.icon-circle:hover{background:#1d2026}
+.icon-circle:active{transform:scale(.95)}
+
+.plans-pill{
+  height:42px;
+  padding:0 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#1c1f25;
+  color:#e7eaf0;
+  font-family:'Rajdhani',sans-serif;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:.2px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  transition:background .2s var(--ease), transform .15s var(--ease);
+}
+.plans-pill:hover{background:#252931}
+.plans-pill:active{transform:scale(.97)}
+.plans-spark{font-size:13px;color:#cfd4df}
+
+.login-center{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px 8px;
+}
+.login-brand-thumb{
+  width:84px;
+  height:84px;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.22);
+  background:#111318;
+  box-shadow:0 0 24px rgba(255,255,255,.10);
+  margin-bottom:14px;
+}
+.login-brand-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.login-helper-title{
+  margin:0;
+  font-size:21px;
+  font-weight:600;
+  color:#f2f4f8;
+  letter-spacing:.2px;
+}
+.login-helper-sub{
+  margin:6px 0 0;
+  font-size:14px;
+  color:var(--muted);
+  max-width:290px;
+}
+.login-feedback{
+  margin-top:12px;
+  min-height:20px;
+  font-size:13.5px;
+  font-weight:700;
+  letter-spacing:.3px;
+  color:#ff8a8a;
+  text-align:center;
+}
+.login-feedback.ok{color:#86efac}
+
+.login-bottom-area{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.quick-suggestions{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding-left:6px;
+}
+.suggestion-row{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  background:transparent;
+  border:none;
+  padding:2px 0;
+  color:#c8cdd8;
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;
+  font-weight:500;
+  text-align:left;
+  cursor:pointer;
+  transition:color .2s var(--ease), transform .15s var(--ease);
+}
+.suggestion-row:hover{color:#ffffff;transform:translateX(2px)}
+.suggestion-row svg{flex:0 0 auto;color:#a5abb8}
+
+.key-composer-form{
+  width:100%;
+}
+.key-composer-pill{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:56px;
+  padding:7px 8px 7px 14px;
+  border-radius:28px;
+  background:#15171c;
+  border:1px solid rgba(255,255,255,.09);
+  transition:border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.key-composer-pill:focus-within{
+  border-color:rgba(255,255,255,.28);
+  box-shadow:0 0 0 2px rgba(255,255,255,.05);
+}
+.plus-btn{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:none;
+  background:transparent;
+  color:#e5e8ef;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+.plus-btn:hover{background:rgba(255,255,255,.08)}
+.key-composer-input{
+  flex:1;
+  min-width:0;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:#ffffff;
+  font-family:'Rajdhani',sans-serif;
+  font-size:16.5px;
+  font-weight:500;
+  letter-spacing:.4px;
+}
+.key-composer-input::placeholder{
+  color:#8f95a2;
+}
+.mic-btn{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:none;
+  background:transparent;
+  color:#dfe3ec;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+.mic-btn:hover{background:rgba(255,255,255,.08)}
+.send-wave-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:none;
+  background:var(--accent);
+  color:#ffffff;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  flex:0 0 auto;
+  box-shadow:0 0 16px rgba(43,127,255,.45);
+  transition:transform .15s var(--ease), opacity .2s var(--ease), background .2s var(--ease);
+}
+.send-wave-btn:hover:not(:disabled){background:#3b8bff}
+.send-wave-btn:active:not(:disabled){transform:scale(.94)}
+.send-wave-btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* Slide-out Drawer matching reference */
+.drawer-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:50;
+  background:rgba(0,0,0,.62);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s var(--ease);
+}
+.drawer-backdrop.open{
+  opacity:1;
+  pointer-events:auto;
+}
+.drawer{
+  position:fixed;
+  top:0;
+  left:0;
+  bottom:0;
+  z-index:60;
+  width:min(84vw, 370px);
+  background:#0a0b0e;
+  border-right:1px solid rgba(255,255,255,.08);
+  display:flex;
+  flex-direction:column;
+  transform:translateX(-100%);
+  transition:transform .28s var(--ease);
+}
+.drawer.open{transform:translateX(0)}
+
+.drawer-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 16px 12px;
+}
+.drawer-brand{
+  margin:0;
+  font-family:'Rajdhani',sans-serif;
+  font-size:21px;
+  font-weight:700;
+  color:#f3f5f8;
+  letter-spacing:.2px;
+}
+.drawer-top-actions{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.drawer-icon-btn{
+  background:transparent;
+  border:none;
+  color:#d5d9e2;
+  padding:6px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+.drawer-icon-btn:hover{background:rgba(255,255,255,.07);color:#ffffff}
+
+.drawer-search-wrap{
+  display:none;
+  padding:0 16px 10px;
+}
+.drawer-search-wrap.open{display:block}
+.drawer-search-input{
+  width:100%;
+  height:38px;
+  padding:0 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);
+  background:#14171d;
+  color:#ffffff;
+  font-family:'Rajdhani',sans-serif;
+  font-size:15px;
+  outline:none;
+}
+
+.drawer-scroll{
+  flex:1;
+  overflow-y:auto;
+  padding:4px 12px 14px;
+}
+.drawer-nav-list{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.drawer-nav-item{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:11px 8px;
+  border-radius:10px;
+  border:none;
+  background:transparent;
+  color:#e4e7ee;
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;
+  font-weight:500;
+  text-align:left;
+  cursor:pointer;
+  transition:background .18s var(--ease);
+}
+.drawer-nav-item:hover{background:rgba(255,255,255,.06)}
+.drawer-nav-item svg{flex:0 0 auto;color:#c9ced9}
+
+.drawer-divider{
+  height:1px;
+  background:rgba(255,255,255,.09);
+  margin:10px 4px 12px;
+}
+.drawer-chats-list{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.drawer-chat-item{
+  width:100%;
+  padding:10px 8px;
+  border-radius:10px;
+  border:none;
+  background:transparent;
+  color:#cfd4df;
+  font-family:'Rajdhani',sans-serif;
+  font-size:15.5px;
+  font-weight:500;
+  text-align:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  cursor:pointer;
+  transition:background .18s var(--ease), color .18s var(--ease);
+}
+.drawer-chat-item:hover{background:rgba(255,255,255,.06);color:#ffffff}
+.drawer-ver-todos{
+  margin-top:4px;
+  padding:10px 8px;
+  border:none;
+  background:transparent;
+  color:#8f95a2;
+  font-family:'Rajdhani',sans-serif;
+  font-size:15px;
+  font-weight:500;
+  text-align:left;
+  cursor:pointer;
+}
+.drawer-ver-todos:hover{color:#d5d9e2}
+
+.drawer-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.drawer-chat-pill{
+  height:42px;
+  padding:0 18px;
+  border-radius:999px;
+  border:none;
+  background:var(--accent);
+  color:#ffffff;
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  cursor:pointer;
+  box-shadow:0 0 16px rgba(43,127,255,.35);
+}
+.drawer-settings-btn{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:none;
+  background:transparent;
+  color:#cfd4df;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+.drawer-settings-btn:hover{background:rgba(255,255,255,.08);color:#ffffff}
+
+/* Main Injection Panel */
+.panel-view{
+  display:none;
+  padding:18px 16px 32px;
+  background:
+    radial-gradient(620px 380px at 50% -6%, rgba(255,255,255,.09), transparent 68%),
+    #070708;
+  min-height:calc(100vh - 51px);
+}
+.panel-view.active{display:block;animation:fadeUp .32s var(--ease) both}
+
+.head{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:10px}
+.logo{position:relative;width:128px;height:128px;border-radius:50%;display:grid;place-items:center}
+.ring{position:absolute;border-radius:50%;pointer-events:none}
+.ring-outer{inset:0;border:2px solid rgba(255,255,255,.85);box-shadow:var(--glow-m);animation:spin 16s linear infinite}
+.ring-inner{inset:9px;border:1px dashed rgba(255,255,255,.45);animation:spinRev 24s linear infinite}
+.core{
+  position:absolute;inset:20px;border-radius:50%;overflow:hidden;
+  background:#09090b;
+  border:1px solid rgba(255,255,255,.35);
+}
+.core img{width:100%;height:100%;object-fit:cover;display:block}
+.title{
+  margin:18px 0 0;
+  font-family:'Orbitron',sans-serif;
+  font-weight:900;
+  font-size:24px;
+  letter-spacing:.6px;
+  color:#ffffff;
+}
+.tag{
+  display:flex;align-items:center;gap:9px;margin:9px 0 0;
+  font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2.2px;
+  text-transform:uppercase;color:var(--muted);
+}
+.tag i{display:block;width:24px;height:1px;background:rgba(255,255,255,.4)}
+
+.session-banner{
+  margin-top:14px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.04);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-size:13px;
+  color:#d4d4d8;
+}
+
+.panel-card{
+  margin-top:16px;
+  padding:17px 15px 18px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+}
+.h2{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin:0 0 13px;
+  font-family:'Orbitron',sans-serif;font-weight:700;font-size:13.5px;color:#ffffff;
+}
+.h2-left{display:flex;align-items:center;gap:8px}
+.h2-left::before{content:"";width:3px;height:15px;border-radius:2px;background:#ffffff;box-shadow:var(--glow-s)}
+
+.drop{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:26px 14px;border-radius:18px;text-align:center;cursor:pointer;
+  border:1.5px dashed rgba(255,255,255,.28);
+  background:rgba(255,255,255,.02);
+  transition:border-color .25s var(--ease), transform .2s var(--ease);
+}
+.drop:hover{border-color:rgba(255,255,255,.7);transform:translateY(-1px)}
+.drop.is-drag{border-color:#ffffff;background:rgba(255,255,255,.07)}
+.drop.is-loaded{border-style:solid;border-color:rgba(255,255,255,.55)}
+.drop-title{margin:0;font-size:15.5px;font-weight:600;color:#ffffff}
+.drop-hint{margin:0;font-size:11.5px;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)}
+
+.file{display:none;align-items:center;gap:11px;margin-top:12px;padding:12px 13px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05)}
+.file.show{display:flex}
+.file-meta{min-width:0;flex:1}
+.file-name{display:block;font-family:'Orbitron',sans-serif;font-size:11.5px;font-weight:600;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-size{font-size:11px;color:var(--muted);text-transform:uppercase}
+
+.actions{display:flex;flex-direction:column;gap:9px;margin-top:15px}
+.btn{
+  width:100%;padding:13px 15px;border-radius:14px;cursor:pointer;
+  font-family:'Orbitron',sans-serif;font-weight:700;font-size:11px;letter-spacing:1.4px;
+  text-transform:uppercase;border:1px solid transparent;
+  transition:transform .16s var(--ease), opacity .2s var(--ease), background .2s var(--ease);
+}
+.btn-sm{width:auto;padding:8px 10px;border-radius:10px;font-size:9px;letter-spacing:1px}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn-primary{color:#09090b;background:linear-gradient(180deg,#ffffff,#e4e4e7)}
+.btn-ghost{color:#e4e4e7;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.22)}
+.btn-ghost:hover:not(:disabled){background:rgba(255,255,255,.1)}
+
+.status-box{
+  display:none;margin-top:12px;padding:11px 13px;border-radius:12px;
+  font-size:13px;font-weight:600;color:#f4f4f5;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);
+}
+.status-box.show{display:block}
+.progress{display:none;margin-top:12px}
+.progress.show{display:block}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#a1a1aa,#ffffff);transition:width .15s linear}
+.progress-row{display:flex;justify-content:space-between;margin-top:7px;font-family:'Orbitron',sans-serif;font-size:9px;color:var(--muted)}
+
+/* Key Generator View */
+.gen-view{
+  display:none;
+  padding:18px 16px 32px;
+  background:#070708;
+  min-height:calc(100vh - 51px);
+}
+.gen-view.active{display:block;animation:fadeUp .32s var(--ease) both}
+
+.field{margin-bottom:13px}
+.label{
+  display:block;margin-bottom:6px;
+  font-family:'Orbitron',sans-serif;font-size:9.5px;letter-spacing:1.3px;
+  text-transform:uppercase;color:#d4d4d8;
+}
+.input,.select{
+  width:100%;height:46px;padding:0 14px;border-radius:13px;
+  border:1.5px solid rgba(255,255,255,.2);background:rgba(12,12,15,.88);
+  color:#ffffff;font-family:'Orbitron',sans-serif;font-size:12px;outline:none;
+}
+.select option{background:#0c0c0f;color:#ffffff}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+
+.card-key{
+  margin-top:14px;padding:13px 14px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);
+}
+.card-key-label{display:block;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.card-key-value{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:#ffffff;word-break:break-all}
+.card-key-sub{margin-top:6px;font-size:12.5px;font-weight:600;color:#d4d4d8}
+
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.summary-box{padding:10px 8px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.03);text-align:center}
+.summary-num{display:block;font-family:'Orbitron',sans-serif;font-size:15px;font-weight:800;color:#ffffff}
+.summary-lbl{display:block;margin-top:3px;font-family:'Orbitron',sans-serif;font-size:7.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+
+.filter-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.filter-btn{
+  padding:8px 6px;border-radius:10px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.03);color:var(--muted);
+  font-family:'Orbitron',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;cursor:pointer;
+}
+.filter-btn.active{background:#ffffff;color:#09090b;border-color:#ffffff}
+
+.keys-list{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto}
+.key-item{padding:11px 12px;border-radius:13px;border:1px solid rgba(255,255,255,.15);background:rgba(12,12,15,.75)}
+.key-item-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.key-code{font-family:'Orbitron',sans-serif;font-size:11.5px;font-weight:700;color:#ffffff;word-break:break-all}
+.badge{padding:3px 8px;border-radius:999px;font-family:'Orbitron',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase}
+.badge-ativa{background:#ffffff;color:#09090b}
+.badge-pausada{background:rgba(255,255,255,.12);color:#f4f4f5}
+.badge-expirada{background:rgba(255,255,255,.04);color:#a1a1aa}
+.key-meta{margin-top:6px;font-size:12px;color:var(--muted)}
+.key-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.empty-msg{padding:15px;border-radius:12px;border:1px dashed rgba(255,255,255,.18);text-align:center;font-size:13px;color:var(--muted)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinRev{to{transform:rotate(-360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="mode-bar">
+      <button class="mode-tab active" id="tabAppLogin" type="button">App / Login</button>
+      <button class="mode-tab" id="tabKeygen" type="button">Gerador de Keys</button>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <section class="login-view" id="loginView" aria-label="Tela de login">
+      <div class="top-bar">
+        <button class="icon-circle" id="btnOpenDrawer" type="button" aria-label="Abrir menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </button>
+
+        <button class="plans-pill" id="btnVerPlanos" type="button">
+          <span class="plans-spark">✦</span>
+          <span>Ver planos</span>
+        </button>
+
+        <button class="icon-circle" id="btnTempMode" type="button" aria-label="Modo temporário">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+            <path d="M16 16h5v5"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="login-center">
+        <div class="login-brand-thumb">
+          <img src="1000022635_2.jpg" alt="Kzz Sensi">
+        </div>
+        <h1 class="login-helper-title">Ativar acesso Kzz Sensi</h1>
+        <p class="login-helper-sub">Digite ou cole sua key na barra abaixo para liberar o painel HeadTrick Kzz.</p>
+        <div class="login-feedback" id="loginFeedback" role="alert"></div>
+      </div>
+
+      <div class="login-bottom-area">
+        <div class="quick-suggestions">
+          <button class="suggestion-row" id="sugAprender" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+            <span>Aprender alguma coisa</span>
+          </button>
+
+          <button class="suggestion-row" id="sugImagem" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <span>Crie uma imagem</span>
+          </button>
+
+          <button class="suggestion-row" id="sugEscrever" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            <span>Escreva ou edite</span>
+          </button>
+        </div>
+
+        <form class="key-composer-form" id="keyLoginForm">
+          <div class="key-composer-pill">
+            <button class="plus-btn" id="btnPasteKey" type="button" title="Colar key" aria-label="Colar key">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+
+            <input
+              class="key-composer-input"
+              id="keyInput"
+              type="text"
+              placeholder="Perguntar ao ChatGPT"
+              autocomplete="off"
+              autocapitalize="characters"
+              aria-label="Digite sua key para ativar"
+            >
+
+            <button class="mic-btn" id="btnClearKey" type="button" title="Limpar" aria-label="Limpar ou microfone">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+
+            <button class="send-wave-btn" id="btnActivateKey" type="submit" title="Ativar key" aria-label="Ativar key">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+                <line x1="5" y1="10" x2="5" y2="14"></line>
+                <line x1="9" y1="7" x2="9" y2="17"></line>
+                <line x1="13" y1="5" x2="13" y2="19"></line>
+                <line x1="17" y1="8" x2="17" y2="16"></line>
+                <line x1="21" y1="10" x2="21" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- MAIN INJECTION PANEL -->
+    <section class="panel-view" id="panelView" aria-label="Painel HeadTrick Kzz">
+      <header class="head">
+        <div class="logo">
+          <span class="ring ring-outer"></span>
+          <span class="ring ring-inner"></span>
+          <div class="core">
+            <img src="1000022635_2.jpg" alt="HeadTrick Kzz">
+          </div>
+        </div>
+        <h2 class="title">HeadTrick Kzz</h2>
+        <p class="tag"><i></i>Sistema de injeção<i></i></p>
+      </header>
+
+      <div class="session-banner">
+        <span id="sessionInfo">Key ativa: —</span>
+        <button class="btn btn-ghost btn-sm" id="btnLogoutKey" type="button">Sair</button>
+      </div>
+
+      <div class="panel-card">
+        <h3 class="h2"><span class="h2-left">Área de injeção:</span></h3>
+
+        <div class="drop" id="htDrop" role="button" tabindex="0">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+            <path d="M14 2v5h5"></path>
+            <path d="M12 17v-6"></path>
+            <path d="M9.5 13.5 12 11l2.5 2.5"></path>
+          </svg>
+          <p class="drop-title">Insira aqui o arquivo HeadTrick:</p>
+          <p class="drop-hint">Toque para abrir o armazenamento</p>
+        </div>
+        <input type="file" id="htInput" hidden>
+
+        <div class="file" id="htFileCard">
+          <div class="file-meta">
+            <span class="file-name" id="htFileName">—</span>
+            <span class="file-size" id="htFileSize">—</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="htSelect" type="button">Selecionar arquivo</button>
+          <button class="btn btn-ghost" id="htRemove" type="button" disabled>Remover arquivo</button>
+        </div>
+
+        <div class="status-box" id="htStatus"></div>
+
+        <div class="progress" id="htProgress">
+          <div class="bar"><i id="htBar"></i></div>
+          <div class="progress-row"><span id="htProgressLabel">Injetando…</span><b id="htProgressPct">0%</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY GENERATOR VIEW -->
+    <section class="gen-view" id="genView" aria-label="Gerador de Keys">
+      <div class="panel-card" style="margin-top:0">
+        <h3 class="h2"><span class="h2-left">Gerar nova key:</span></h3>
+
+        <div class="field">
+          <label class="label" for="prefix">Prefixo da key</label>
+          <input class="input" id="prefix" type="text" value="KZZ-" placeholder="Ex: KZZ-">
+        </div>
+
+        <div class="field">
+          <label class="label" for="durationSelect">Validade / Duração</label>
+          <select class="select" id="durationSelect">
+            <option value="1h">1 Hora</option>
+            <option value="6h">6 Horas</option>
+            <option value="12h">12 Horas</option>
+            <option value="1d" selected>1 Dia</option>
+            <option value="3d">3 Dias</option>
+            <option value="7d">1 Semana (7 Dias)</option>
+            <option value="14d">2 Semanas (14 Dias)</option>
+            <option value="30d">1 Mês (30 Dias)</option>
+            <option value="90d">3 Meses (90 Dias)</option>
+            <option value="180d">6 Meses (180 Dias)</option>
+            <option value="365d">1 Ano (365 Dias)</option>
+            <option value="perm">Permanente</option>
+          </select>
+        </div>
+
+        <div class="row-2" style="margin-top:0">
+          <button class="btn btn-ghost" id="btnGerarKey" type="button">Gerar key</button>
+          <button class="btn btn-primary" id="btnSalvarKey" type="button">Salvar key</button>
+        </div>
+
+        <div class="card-key">
+          <span class="card-key-label">Chave gerada</span>
+          <div class="card-key-value" id="keyResultado">NENHUMA KEY GERADA</div>
+          <div class="card-key-sub" id="keyDuracaoInfo">Duração: — · 1 Dispositivo</div>
+        </div>
+
+        <button class="btn btn-ghost" id="btnCopiar" type="button" style="margin-top:9px">Copiar key</button>
+
+        <h3 class="h2" style="margin-top:20px"><span class="h2-left">Gerenciar key (Reset / Pausar):</span></h3>
+
+        <div class="field">
+          <label class="label" for="targetKey">Key alvo no Firebase</label>
+          <input class="input" id="targetKey" type="text" placeholder="Ex: KZZ-A19DHBD73">
+        </div>
+
+        <div class="row-2">
+          <button class="btn btn-ghost" id="btnResetKey" type="button">Reset key</button>
+          <button class="btn btn-ghost" id="btnPauseKey" type="button">Pausar / Ativar</button>
+        </div>
+
+        <h3 class="h2" style="margin-top:20px">
+          <span class="h2-left">Keys no banco:</span>
+          <button class="btn btn-ghost btn-sm" id="btnAtualizarLista" type="button">Atualizar</button>
+        </h3>
+
+        <div class="summary-grid">
+          <div class="summary-box">
+            <span class="summary-num" id="countAtivas">0</span>
+            <span class="summary-lbl">Ativas</span>
+          </div>
+          <div class="summary-box">
+            <span class="summary-num" id="countPausadas">0</span>
+            <span class="summary-lbl">Pausadas / Desat.</span>
+          </div>
+          <div class="summary-box">
+            <span class="summary-num" id="countExpiradas">0</span>
+            <span class="summary-lbl">Expiradas</span>
+          </div>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-filter="todas" type="button">Todas</button>
+          <button class="filter-btn" data-filter="ativa" type="button">Ativas</button>
+          <button class="filter-btn" data-filter="pausada" type="button">Pausadas</button>
+          <button class="filter-btn" data-filter="expirada" type="button">Expiradas</button>
+        </div>
+
+        <div class="keys-list" id="keysList">
+          <div class="empty-msg">Carregando keys do Firebase...</div>
+        </div>
+
+        <div class="status-box show" id="statusMsg">Escolha a duração e clique em "Gerar key".</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SLIDE-OUT DRAWER -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="sideDrawer" aria-label="Menu lateral">
+    <div class="drawer-top">
+      <h2 class="drawer-brand">ChatGPT</h2>
+      <div class="drawer-top-actions">
+        <button class="drawer-icon-btn" id="btnToggleSearch" type="button" aria-label="Buscar conversas">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+        <button class="drawer-icon-btn" id="btnDrawerNew" type="button" aria-label="Nova conversa">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+            <path d="M16 16h5v5"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="drawer-search-wrap" id="drawerSearchWrap">
+      <input class="drawer-search-input" id="drawerSearchInput" type="text" placeholder="Filtrar chats...">
+    </div>
+
+    <div class="drawer-scroll">
+      <div class="drawer-nav-list">
+        <button class="drawer-nav-item" id="navImagens" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <span>Imagens</span>
+        </button>
+
+        <button class="drawer-nav-item" id="navBiblioteca" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="4" height="16" rx="1"></rect>
+            <rect x="10" y="4" width="4" height="16" rx="1"></rect>
+            <path d="M16 5l4 15"></path>
+          </svg>
+          <span>Biblioteca</span>
+        </button>
+
+        <button class="drawer-nav-item" id="navPersonalizar" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <circle cx="9" cy="7" r="2.2" fill="#0a0b0e"></circle>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
+            <circle cx="15" cy="17" r="2.2" fill="#0a0b0e"></circle>
+          </svg>
+          <span>Personalizar</span>
+        </button>
+
+        <button class="drawer-nav-item" id="navProjetos" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          </svg>
+          <span>Projetos</span>
+        </button>
+
+        <button class="drawer-nav-item" id="navControleRemoto" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="3" width="16" height="12" rx="2"></rect>
+            <line x1="12" y1="15" x2="12" y2="19"></line>
+            <circle cx="7" cy="20" r="1"></circle>
+            <circle cx="12" cy="20" r="1"></circle>
+            <circle cx="17" cy="20" r="1"></circle>
+          </svg>
+          <span>Controle remoto</span>
+        </button>
+
+        <button class="drawer-nav-item" id="navExplorar" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <circle cx="6.5" cy="17.5" r="3.5"></circle>
+          </svg>
+          <span>Explorar</span>
+        </button>
+      </div>
+
+      <div class="drawer-divider"></div>
+
+      <div class="drawer-chats-list" id="drawerChatsList"></div>
+
+      <button class="drawer-ver-todos" id="btnVerTodosChats" type="button">Ver todos...</button>
+    </div>
+
+    <div class="drawer-footer">
+      <button class="drawer-chat-pill" id="btnDrawerChat" type="button">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+        </svg>
+        <span>Chat</span>
+      </button>
+
+      <button class="drawer-settings-btn" id="btnDrawerSettings" type="button" aria-label="Configurações">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcLFr8q4KqRc1Xw6ZXcNS3FRTF3Xu7Fqg",
+      authDomain: "kzzsenzi.firebaseapp.com",
+      databaseURL: "https://kzzsenzi-default-rtdb.firebaseio.com",
+      projectId: "kzzsenzi",
+      storageBucket: "kzzsenzi.firebasestorage.app",
+      messagingSenderId: "615418709882",
+      appId: "1:615418709882:web:c8264ebbd48677b99378c3",
+      measurementId: "G-DMF65WY3B8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const DURATIONS = {
+      "1h":   { label: "1 Hora",            ms: 1 * 60 * 60 * 1000 },
+      "6h":   { label: "6 Horas",           ms: 6 * 60 * 60 * 1000 },
+      "12h":  { label: "12 Horas",          ms: 12 * 60 * 60 * 1000 },
+      "1d":   { label: "1 Dia",             ms: 1 * 24 * 60 * 60 * 1000 },
+      "3d":   { label: "3 Dias",            ms: 3 * 24 * 60 * 60 * 1000 },
+      "7d":   { label: "1 Semana",          ms: 7 * 24 * 60 * 60 * 1000 },
+      "14d":  { label: "2 Semanas",         ms: 14 * 24 * 60 * 60 * 1000 },
+      "30d":  { label: "1 Mês (30 Dias)",   ms: 30 * 24 * 60 * 60 * 1000 },
+      "90d":  { label: "3 Meses (90 Dias)", ms: 90 * 24 * 60 * 60 * 1000 },
+      "180d": { label: "6 Meses",           ms: 180 * 24 * 60 * 60 * 1000 },
+      "365d": { label: "1 Ano (365 Dias)",  ms: 365 * 24 * 60 * 60 * 1000 },
+      "perm": { label: "Permanente",        ms: null }
+    };
+
+    const DEEPLINK = {
+      android: "freefire://",
+      ios: "freefire://",
+      desktop: "freefire://"
+    };
+
+    const CHAT_TITLES = [
+      "Como fazer arroz doce",
+      "Como fazer pudim",
+      "Receita de brigadeiro cremoso",
+      "Como fazer panqueca americana",
+      "Bolo de chocolate fofinho",
+      "Como fazer strogonoff de frango",
+      "Receita de pão de queijo",
+      "Como fazer lasanha bolonhesa",
+      "Sobremesa de mousse de maracujá",
+      "Como temperar costela assada",
+      "Receita de brownie simples",
+      "Como fazer caldo verde"
+    ];
+
+    const DEVICE_STORAGE_KEY = "ht_kzz_device_id";
+    let isAuthenticated = false;
+    let activeKeyCode = "";
+
+    function getDeviceId() {
+      try {
+        let id = localStorage.getItem(DEVICE_STORAGE_KEY);
+        if (!id) {
+          id = (typeof crypto !== "undefined" && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : ("DEV-" + Math.random().toString(36).slice(2, 12).toUpperCase() + "-" + Date.now().toString(36).toUpperCase());
+          localStorage.setItem(DEVICE_STORAGE_KEY, id);
+        }
+        return id;
+      } catch {
+        return "DEV-TEMP-" + Date.now().toString(36).toUpperCase();
+      }
+    }
+
+    function withTimeout(promise, ms = 8000) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("TIMEOUT_FIREBASE")), ms)
+        )
+      ]);
+    }
+
+    // View Tabs
+    const tabAppLogin = document.getElementById("tabAppLogin");
+    const tabKeygen = document.getElementById("tabKeygen");
+    const loginView = document.getElementById("loginView");
+    const panelView = document.getElementById("panelView");
+    const genView = document.getElementById("genView");
+
+    function setTopTab(mode) {
+      if (mode === "keygen") {
+        tabKeygen.classList.add("active");
+        tabAppLogin.classList.remove("active");
+        genView.classList.add("active");
+        loginView.classList.add("hidden");
+        panelView.classList.remove("active");
+        loadKeysFromFirebase(false);
+      } else {
+        tabAppLogin.classList.add("active");
+        tabKeygen.classList.remove("active");
+        genView.classList.remove("active");
+        if (isAuthenticated) {
+          loginView.classList.add("hidden");
+          panelView.classList.add("active");
+        } else {
+          loginView.classList.remove("hidden");
+          panelView.classList.remove("active");
+        }
+      }
+    }
+
+    tabAppLogin.addEventListener("click", () => setTopTab("app"));
+    tabKeygen.addEventListener("click", () => setTopTab("keygen"));
+
+    // Drawer logic
+    const drawer = document.getElementById("sideDrawer");
+    const drawerBackdrop = document.getElementById("drawerBackdrop");
+    const btnOpenDrawer = document.getElementById("btnOpenDrawer");
+    const btnToggleSearch = document.getElementById("btnToggleSearch");
+    const drawerSearchWrap = document.getElementById("drawerSearchWrap");
+    const drawerSearchInput = document.getElementById("drawerSearchInput");
+    const drawerChatsList = document.getElementById("drawerChatsList");
+    const btnVerTodosChats = document.getElementById("btnVerTodosChats");
+
+    let showAllChats = false;
+
+    function openDrawer() {
+      drawer.classList.add("open");
+      drawerBackdrop.classList.add("open");
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("open");
+      drawerBackdrop.classList.remove("open");
+    }
+
+    function renderDrawerChats() {
+      const q = (drawerSearchInput.value || "").trim().toLowerCase();
+      let list = CHAT_TITLES.filter((t) => !q || t.toLowerCase().includes(q));
+      if (!q && !showAllChats) {
+        list = list.slice(0, 10);
+      }
+      drawerChatsList.innerHTML = "";
+      list.forEach((title) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "drawer-chat-item";
+        btn.textContent = title;
+        btn.addEventListener("click", () => {
+          closeDrawer();
+          setTopTab("app");
+          keyInput.focus();
+          loginFeedback.className = "login-feedback";
+          loginFeedback.textContent = `Chat "${title}" — insira sua key na barra abaixo para ativar.`;
+        });
+        drawerChatsList.appendChild(btn);
+      });
+      btnVerTodosChats.style.display = (!q && !showAllChats && CHAT_TITLES.length > 10) ? "block" : "none";
+    }
+
+    btnOpenDrawer.addEventListener("click", openDrawer);
+    drawerBackdrop.addEventListener("click", closeDrawer);
+    btnToggleSearch.addEventListener("click", () => {
+      drawerSearchWrap.classList.toggle("open");
+      if (drawerSearchWrap.classList.contains("open")) {
+        drawerSearchInput.focus();
+      }
+    });
+    drawerSearchInput.addEventListener("input", renderDrawerChats);
+    btnVerTodosChats.addEventListener("click", () => {
+      showAllChats = true;
+      renderDrawerChats();
+    });
+
+    document.getElementById("btnDrawerNew").addEventListener("click", () => {
+      closeDrawer();
+      setTopTab("app");
+      keyInput.value = "";
+      loginFeedback.className = "login-feedback";
+      loginFeedback.textContent = "";
+      keyInput.focus();
+    });
+    document.getElementById("btnDrawerChat").addEventListener("click", () => {
+      closeDrawer();
+      setTopTab("app");
+      keyInput.focus();
+    });
+    document.getElementById("btnDrawerSettings").addEventListener("click", () => {
+      closeDrawer();
+      setTopTab("keygen");
+    });
+    ["navImagens", "navBiblioteca", "navPersonalizar", "navProjetos", "navControleRemoto", "navExplorar"].forEach((id) => {
+      document.getElementById(id).addEventListener("click", () => {
+        closeDrawer();
+        setTopTab("app");
+        keyInput.focus();
+        loginFeedback.className = "login-feedback";
+        loginFeedback.textContent = "Ative uma key válida na barra abaixo para acessar.";
+      });
+    });
+
+    renderDrawerChats();
+
+    // Login & Key activation
+    const keyLoginForm = document.getElementById("keyLoginForm");
+    const keyInput = document.getElementById("keyInput");
+    const btnActivateKey = document.getElementById("btnActivateKey");
+    const btnPasteKey = document.getElementById("btnPasteKey");
+    const btnClearKey = document.getElementById("btnClearKey");
+    const btnVerPlanos = document.getElementById("btnVerPlanos");
+    const btnTempMode = document.getElementById("btnTempMode");
+    const loginFeedback = document.getElementById("loginFeedback");
+    const sessionInfo = document.getElementById("sessionInfo");
+    const btnLogoutKey = document.getElementById("btnLogoutKey");
+
+    btnVerPlanos.addEventListener("click", () => {
+      setTopTab("keygen");
+    });
+
+    btnTempMode.addEventListener("click", () => {
+      keyInput.value = "";
+      loginFeedback.className = "login-feedback";
+      loginFeedback.textContent = "";
+      keyInput.focus();
+    });
+
+    btnPasteKey.addEventListener("click", async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          keyInput.value = text.trim().toUpperCase();
+          loginFeedback.textContent = "";
+        }
+      } catch {
+        keyInput.focus();
+      }
+    });
+
+    btnClearKey.addEventListener("click", () => {
+      keyInput.value = "";
+      loginFeedback.textContent = "";
+      keyInput.focus();
+    });
+
+    ["sugAprender", "sugImagem", "sugEscrever"].forEach((id) => {
+      document.getElementById(id).addEventListener("click", () => {
+        keyInput.focus();
+        loginFeedback.className = "login-feedback";
+        loginFeedback.textContent = "Digite ou cole sua key de acesso e toque no botão azul para ativar.";
+      });
+    });
+
+    async function validateAndBindKey(key) {
+      const keyRef = ref(db, `keys/${key}`);
+      const snap = await withTimeout(get(keyRef), 8000);
+
+      if (!snap.exists()) {
+        return { valid: false, message: "KEY NÃO ENCONTRADA!" };
+      }
+
+      const data = snap.val() || {};
+      if (data.ativa !== true) {
+        return { valid: false, message: "KEY PAUSADA OU INATIVA!" };
+      }
+
+      const now = Date.now();
+      const myDeviceId = getDeviceId();
+
+      if (data.deviceId && data.deviceId !== myDeviceId) {
+        return { valid: false, message: "KEY JÁ VINCULADA A OUTRO DISPOSITIVO!" };
+      }
+
+      if (data.tipoDuracao !== "perm" && data.expiraEm && now > Number(data.expiraEm)) {
+        return { valid: false, message: "KEY EXPIRADA!" };
+      }
+
+      const updates = {};
+      if (!data.deviceId) {
+        updates.deviceId = myDeviceId;
+        updates.usada = true;
+      }
+      if (data.tipoDuracao !== "perm") {
+        const durMs = Number(data.duracaoMs || 0);
+        if (!data.primeiroUsoEm && durMs > 0) {
+          updates.primeiroUsoEm = now;
+          updates.expiraEm = now + durMs;
+        }
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await withTimeout(update(keyRef, updates), 8000);
+      }
+
+      return { valid: true, data };
+    }
+
+    keyLoginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const key = keyInput.value.trim().toUpperCase();
+
+      if (!key) {
+        loginFeedback.className = "login-feedback";
+        loginFeedback.textContent = "Digite a key para ativar.";
+        keyInput.focus();
+        return;
+      }
+
+      btnActivateKey.disabled = true;
+      loginFeedback.className = "login-feedback ok";
+      loginFeedback.textContent = "Verificando key no Firebase...";
+
+      try {
+        const res = await validateAndBindKey(key);
+        if (!res.valid) {
+          loginFeedback.className = "login-feedback";
+          loginFeedback.textContent = res.message;
+          keyInput.focus();
+          return;
+        }
+
+        isAuthenticated = true;
+        activeKeyCode = key;
+        const durText = res.data?.duracaoLabel || "Ativa";
+        sessionInfo.textContent = `Key ativa: ${key} (${durText})`;
+        loginFeedback.textContent = "";
+        loginView.classList.add("hidden");
+        panelView.classList.add("active");
+      } catch (err) {
+        loginFeedback.className = "login-feedback";
+        loginFeedback.textContent = err && err.message === "TIMEOUT_FIREBASE"
+          ? "Tempo esgotado ao falar com o Firebase."
+          : "Erro ao validar key no Firebase.";
+      } finally {
+        btnActivateKey.disabled = false;
+      }
+    });
+
+    btnLogoutKey.addEventListener("click", () => {
+      isAuthenticated = false;
+      activeKeyCode = "";
+      keyInput.value = "";
+      panelView.classList.remove("active");
+      loginView.classList.remove("hidden");
+    });
+
+    // Injection Panel Logic
+    const drop = document.getElementById("htDrop");
+    const input = document.getElementById("htInput");
+    const btnSel = document.getElementById("htSelect");
+    const btnRem = document.getElementById("htRemove");
+    const card = document.getElementById("htFileCard");
+    const elName = document.getElementById("htFileName");
+    const elSize = document.getElementById("htFileSize");
+    const statusBox = document.getElementById("htStatus");
+    const progress = document.getElementById("htProgress");
+    const bar = document.getElementById("htBar");
+    const pct = document.getElementById("htProgressPct");
+    const pLabel = document.getElementById("htProgressLabel");
+
+    let currentFile = null;
+    let injecting = false;
+
+    function bytes(n) {
+      if (n < 1024) return n + " B";
+      if (n < 1048576) return (n / 1024).toFixed(1) + " KB";
+      return (n / 1048576).toFixed(2) + " MB";
+    }
+
+    function showPanelStatus(msg) {
+      statusBox.textContent = msg;
+      statusBox.classList.add("show");
+    }
+
+    function loadFile(file) {
+      if (!file) return;
+      currentFile = file;
+      elName.textContent = file.name;
+      elSize.textContent = bytes(file.size);
+      card.classList.add("show");
+      drop.classList.add("is-loaded");
+      btnRem.disabled = false;
+      btnSel.textContent = "Injetar arquivo";
+      showPanelStatus("Arquivo carregado com sucesso!");
+    }
+
+    function removeFile() {
+      if (injecting) return;
+      currentFile = null;
+      input.value = "";
+      card.classList.remove("show");
+      drop.classList.remove("is-loaded");
+      btnRem.disabled = true;
+      btnSel.textContent = "Selecionar arquivo";
+      statusBox.classList.remove("show");
+      progress.classList.remove("show");
+      bar.style.width = "0%";
+      pct.textContent = "0%";
+    }
+
+    function startInjection() {
+      if (!currentFile || injecting) return;
+      injecting = true;
+      btnSel.disabled = true;
+      btnRem.disabled = true;
+      progress.classList.add("show");
+      showPanelStatus("Injetando script...");
+
+      let val = 0;
+      const timer = setInterval(() => {
+        val += Math.floor(Math.random() * 9) + 4;
+        if (val >= 100) {
+          val = 100;
+          clearInterval(timer);
+          bar.style.width = "100%";
+          pct.textContent = "100%";
+          pLabel.textContent = "Injeção concluída!";
+          showPanelStatus("Injeção concluída! Abrindo Free Fire...");
+
+          setTimeout(() => {
+            const ua = navigator.userAgent || "";
+            if (/android/i.test(ua)) window.location.href = DEEPLINK.android;
+            else if (/iPad|iPhone|iPod/.test(ua)) window.location.href = DEEPLINK.ios;
+            else window.location.href = DEEPLINK.desktop;
+
+            setTimeout(() => {
+              injecting = false;
+              btnSel.disabled = false;
+              btnRem.disabled = false;
+            }, 1500);
+          }, 900);
+        } else {
+          bar.style.width = val + "%";
+          pct.textContent = val + "%";
+        }
+      }, 90);
+    }
+
+    drop.addEventListener("click", () => { if (!injecting) input.click(); });
+    drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("is-drag"); });
+    drop.addEventListener("dragleave", () => drop.classList.remove("is-drag"));
+    drop.addEventListener("drop", (e) => {
+      e.preventDefault();
+      drop.classList.remove("is-drag");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+    });
+    input.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) loadFile(e.target.files[0]);
+    });
+    btnSel.addEventListener("click", () => {
+      if (!currentFile) input.click();
+      else startInjection();
+    });
+    btnRem.addEventListener("click", removeFile);
+
+    // Key Generator Logic
+    const outEl = document.getElementById("keyResultado");
+    const durInfoEl = document.getElementById("keyDuracaoInfo");
+    const statusEl = document.getElementById("statusMsg");
+    const prefixEl = document.getElementById("prefix");
+    const durationEl = document.getElementById("durationSelect");
+    const targetKeyEl = document.getElementById("targetKey");
+    const btnGerarKey = document.getElementById("btnGerarKey");
+    const btnSalvarKey = document.getElementById("btnSalvarKey");
+    const btnCopiar = document.getElementById("btnCopiar");
+    const btnResetKey = document.getElementById("btnResetKey");
+    const btnPauseKey = document.getElementById("btnPauseKey");
+    const btnAtualizarLista = document.getElementById("btnAtualizarLista");
+    const keysListEl = document.getElementById("keysList");
+    const countAtivasEl = document.getElementById("countAtivas");
+    const countPausadasEl = document.getElementById("countPausadas");
+    const countExpiradasEl = document.getElementById("countExpiradas");
+    const filterBtns = Array.from(document.querySelectorAll(".filter-btn"));
+
+    let isBusy = false;
+    let keyProntaParaSalvar = null;
+    let cachedKeys = [];
+    let currentFilter = "todas";
+
+    function criarCodigo(tamanho = 9) {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+      let code = "";
+      for (let i = 0; i < tamanho; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return code;
+    }
+
+    function getSelectedDuration() {
+      const code = durationEl.value;
+      const spec = DURATIONS[code] || DURATIONS["1d"];
+      return { tipoDuracao: code, duracaoLabel: spec.label, duracaoMs: spec.ms };
+    }
+
+    function setBusy(busy) {
+      isBusy = busy;
+      btnGerarKey.disabled = busy;
+      btnSalvarKey.disabled = busy;
+      btnResetKey.disabled = busy;
+      btnPauseKey.disabled = busy;
+      btnAtualizarLista.disabled = busy;
+    }
+
+    function formatError(err) {
+      if (err && err.message === "TIMEOUT_FIREBASE") {
+        return "Tempo esgotado ao falar com o Firebase. Confira internet e regras do banco.";
+      }
+      return "Erro ao conectar ao Firebase: " + (err?.message || "desconhecido");
+    }
+
+    function classifyKey(data, now = Date.now()) {
+      const ativaFlag = data && data.ativa === true;
+      const isPerm = data && data.tipoDuracao === "perm";
+      const expiraEm = data && data.expiraEm ? Number(data.expiraEm) : null;
+      const isExpired = !isPerm && expiraEm !== null && now > expiraEm;
+
+      if (!ativaFlag) return { status: "pausada", badgeText: "PAUSADA / DESAT.", badgeClass: "badge-pausada" };
+      if (isExpired) return { status: "expirada", badgeText: "EXPIRADA", badgeClass: "badge-expirada" };
+      return { status: "ativa", badgeText: "ATIVA", badgeClass: "badge-ativa" };
+    }
+
+    function formatRemaining(data, now = Date.now()) {
+      if (!data) return "—";
+      const durLabel = data.duracaoLabel || (data.tipoDuracao === "perm" ? "Permanente" : "Padrão");
+      if (data.tipoDuracao === "perm") return durLabel;
+      if (!data.primeiroUsoEm) return `${durLabel} (inicia no 1º uso)`;
+      if (!data.expiraEm) return durLabel;
+      const diff = Number(data.expiraEm) - now;
+      if (diff <= 0) return `${durLabel} (prazo encerrado)`;
+      const totalMin = Math.floor(diff / 60000);
+      const dias = Math.floor(totalMin / 1440);
+      const horas = Math.floor((totalMin % 1440) / 60);
+      const mins = totalMin % 60;
+      if (dias > 0) return `${durLabel} · resta ${dias}d ${horas}h`;
+      if (horas > 0) return `${durLabel} · resta ${horas}h ${mins}m`;
+      return `${durLabel} · resta ${mins}m`;
+    }
+
+    function renderKeysList() {
+      const now = Date.now();
+      let ativas = 0, pausadas = 0, expiradas = 0;
+
+      const enriched = cachedKeys.map((item) => {
+        const info = classifyKey(item.data, now);
+        if (info.status === "ativa") ativas++;
+        else if (info.status === "pausada") pausadas++;
+        else expiradas++;
+        return { ...item, info };
+      });
+
+      countAtivasEl.textContent = String(ativas);
+      countPausadasEl.textContent = String(pausadas);
+      countExpiradasEl.textContent = String(expiradas);
+
+      const filtered = currentFilter === "todas"
+        ? enriched
+        : enriched.filter((entry) => entry.info.status === currentFilter);
+
+      if (filtered.length === 0) {
+        keysListEl.innerHTML = `<div class="empty-msg">Nenhuma key encontrada neste filtro.</div>`;
+        return;
+      }
+
+      keysListEl.innerHTML = "";
+      filtered.forEach(({ key, data, info }) => {
+        const item = document.createElement("div");
+        item.className = "key-item";
+
+        const top = document.createElement("div");
+        top.className = "key-item-top";
+
+        const codeSpan = document.createElement("span");
+        codeSpan.className = "key-code";
+        codeSpan.textContent = key;
+
+        const badge = document.createElement("span");
+        badge.className = `badge ${info.badgeClass}`;
+        badge.textContent = info.badgeText;
+
+        top.appendChild(codeSpan);
+        top.appendChild(badge);
+
+        const meta = document.createElement("div");
+        meta.className = "key-meta";
+        const devTxt = data.deviceId ? "Vinculada a 1 dispositivo" : "Sem dispositivo";
+        meta.textContent = `${formatRemaining(data, now)} · ${devTxt}`;
+
+        const actions = document.createElement("div");
+        actions.className = "key-actions";
+
+        const bSel = document.createElement("button");
+        bSel.type = "button";
+        bSel.className = "btn btn-ghost btn-sm";
+        bSel.textContent = "Selecionar";
+        bSel.addEventListener("click", () => {
+          targetKeyEl.value = key;
+          statusEl.textContent = `Key ${key} selecionada.`;
+        });
+
+        const bTog = document.createElement("button");
+        bTog.type = "button";
+        bTog.className = "btn btn-ghost btn-sm";
+        bTog.textContent = data.ativa === true ? "Pausar" : "Ativar";
+        bTog.disabled = isBusy;
+        bTog.addEventListener("click", () => toggleKeyActive(key, data.ativa === true));
+
+        const bRst = document.createElement("button");
+        bRst.type = "button";
+        bRst.className = "btn btn-ghost btn-sm";
+        bRst.textContent = "Resetar";
+        bRst.disabled = isBusy;
+        bRst.addEventListener("click", () => resetKeyDevice(key));
+
+        actions.appendChild(bSel);
+        actions.appendChild(bTog);
+        actions.appendChild(bRst);
+
+        item.appendChild(top);
+        item.appendChild(meta);
+        item.appendChild(actions);
+        keysListEl.appendChild(item);
+      });
+    }
+
+    async function loadKeysFromFirebase(showFeedback = false) {
+      if (showFeedback) statusEl.textContent = "Atualizando lista de keys...";
+      try {
+        const snap = await withTimeout(get(ref(db, "keys")), 8000);
+        if (!snap.exists()) {
+          cachedKeys = [];
+          renderKeysList();
+          if (showFeedback) statusEl.textContent = "Nenhuma key salva no banco ainda.";
+          return;
+        }
+        const raw = snap.val() || {};
+        cachedKeys = Object.keys(raw)
+          .map((k) => ({ key: k, data: raw[k] || {} }))
+          .sort((a, b) => Number(b.data.criadaEm || 0) - Number(a.data.criadaEm || 0));
+        renderKeysList();
+        if (showFeedback) statusEl.textContent = `Lista atualizada (${cachedKeys.length} keys).`;
+      } catch (err) {
+        keysListEl.innerHTML = `<div class="empty-msg">Não foi possível carregar as keys.</div>`;
+        if (showFeedback) statusEl.textContent = formatError(err);
+      }
+    }
+
+    async function resetKeyDevice(keyName) {
+      if (isBusy) return;
+      setBusy(true);
+      statusEl.textContent = `Resetando dispositivo de ${keyName}...`;
+      try {
+        const keyRef = ref(db, `keys/${keyName}`);
+        const snap = await withTimeout(get(keyRef), 8000);
+        if (!snap.exists()) {
+          statusEl.textContent = "Key não encontrada no Firebase.";
+          return;
+        }
+        await withTimeout(update(keyRef, { deviceId: null, usada: false, resetadaEm: Date.now() }), 8000);
+        statusEl.textContent = `Dispositivo da key ${keyName} resetado!`;
+        await loadKeysFromFirebase(false);
+      } catch (err) {
+        statusEl.textContent = formatError(err);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function toggleKeyActive(keyName, currentlyActive) {
+      if (isBusy) return;
+      setBusy(true);
+      statusEl.textContent = currentlyActive ? `Pausando ${keyName}...` : `Ativando ${keyName}...`;
+      try {
+        const keyRef = ref(db, `keys/${keyName}`);
+        const snap = await withTimeout(get(keyRef), 8000);
+        if (!snap.exists()) {
+          statusEl.textContent = "Key não encontrada no Firebase.";
+          return;
+        }
+        const novoEstado = !currentlyActive;
+        await withTimeout(update(keyRef, { ativa: novoEstado, atualizadaEm: Date.now() }), 8000);
+        statusEl.textContent = novoEstado ? `Key ${keyName} ativada!` : `Key ${keyName} pausada!`;
+        await loadKeysFromFirebase(false);
+      } catch (err) {
+        statusEl.textContent = formatError(err);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentFilter = btn.dataset.filter || "todas";
+        filterBtns.forEach((b) => b.classList.toggle("active", b === btn));
+        renderKeysList();
+      });
+    });
+
+    btnAtualizarLista.addEventListener("click", () => {
+      if (!isBusy) loadKeysFromFirebase(true);
+    });
+
+    btnGerarKey.addEventListener("click", () => {
+      if (isBusy) return;
+      const prefix = prefixEl.value.trim().toUpperCase();
+      const novaKey = `${prefix}${criarCodigo(9)}`;
+      const dur = getSelectedDuration();
+      keyProntaParaSalvar = { key: novaKey, ...dur };
+      outEl.textContent = novaKey;
+      durInfoEl.textContent = `Duração: ${dur.duracaoLabel} · 1 Dispositivo`;
+      targetKeyEl.value = novaKey;
+      statusEl.textContent = `Key ${novaKey} (${dur.duracaoLabel}) pronta. Clique em "Salvar key".`;
+    });
+
+    btnSalvarKey.addEventListener("click", async () => {
+      if (isBusy) return;
+      const keyStr = (keyProntaParaSalvar?.key || outEl.textContent).trim().toUpperCase();
+      if (!keyStr || keyStr === "NENHUMA KEY GERADA") {
+        statusEl.textContent = 'Clique em "Gerar key" primeiro.';
+        return;
+      }
+      const dur = keyProntaParaSalvar && keyProntaParaSalvar.key === keyStr
+        ? keyProntaParaSalvar
+        : { key: keyStr, ...getSelectedDuration() };
+
+      const keyRef = ref(db, `keys/${keyStr}`);
+      setBusy(true);
+      statusEl.textContent = `Salvando ${keyStr} no Firebase...`;
+      try {
+        const snap = await withTimeout(get(keyRef), 8000);
+        if (snap.exists()) {
+          statusEl.textContent = `A key ${keyStr} já existe. Gere outra.`;
+          return;
+        }
+        await withTimeout(set(keyRef, {
+          ativa: true,
+          usada: false,
+          deviceId: null,
+          tipoDuracao: dur.tipoDuracao,
+          duracaoLabel: dur.duracaoLabel,
+          duracaoMs: dur.duracaoMs,
+          primeiroUsoEm: null,
+          expiraEm: null,
+          criadaEm: Date.now()
+        }), 8000);
+        keyProntaParaSalvar = null;
+        outEl.textContent = keyStr;
+        durInfoEl.textContent = `Duração: ${dur.duracaoLabel} · 1 Dispositivo`;
+        targetKeyEl.value = keyStr;
+        statusEl.textContent = `Key ${keyStr} (${dur.duracaoLabel}) salva com sucesso!`;
+        await loadKeysFromFirebase(false);
+      } catch (err) {
+        statusEl.textContent = formatError(err);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    btnCopiar.addEventListener("click", async () => {
+      const atual = outEl.textContent.trim();
+      if (!atual || atual === "NENHUMA KEY GERADA") {
+        statusEl.textContent = "Gere uma key antes de copiar.";
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(atual);
+        statusEl.textContent = "Key copiada!";
+      } catch {
+        statusEl.textContent = "Não foi possível copiar automaticamente.";
+      }
+    });
+
+    btnResetKey.addEventListener("click", async () => {
+      const keyName = targetKeyEl.value.trim().toUpperCase();
+      if (!keyName) {
+        statusEl.textContent = "Digite a key que deseja resetar.";
+        return;
+      }
+      await resetKeyDevice(keyName);
+    });
+
+    btnPauseKey.addEventListener("click", async () => {
+      const keyName = targetKeyEl.value.trim().toUpperCase();
+      if (!keyName) {
+        statusEl.textContent = "Digite a key que deseja pausar ou ativar.";
+        return;
+      }
+      if (isBusy) return;
+      setBusy(true);
+      try {
+        const keyRef = ref(db, `keys/${keyName}`);
+        const snap = await withTimeout(get(keyRef), 8000);
+        if (!snap.exists()) {
+          statusEl.textContent = "Key não encontrada no Firebase.";
+          return;
+        }
+        const atual = snap.val() || {};
+        const novoEstado = !(atual.ativa === true);
+        await withTimeout(update(keyRef, { ativa: novoEstado, atualizadaEm: Date.now() }), 8000);
+        statusEl.textContent = novoEstado ? `Key ${keyName} ativada!` : `Key ${keyName} pausada!`;
+        await loadKeysFromFirebase(false);
+      } catch (err) {
+        statusEl.textContent = formatError(err);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    loadKeysFromFirebase(false);
+  </script>
+</body>
+</html>
